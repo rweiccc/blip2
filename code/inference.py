@@ -1,49 +1,37 @@
-import torch
 from PIL import Image
-from torchvision import transforms
+import torch
+from transformers import BlipProcessor, BlipForConditionalGeneration
 
-from model import MiniBLIP2
-
-
-# device
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+# 设备
+device = "cuda" if torch.cuda.is_available() else "cpu"
 print("device:", device)
 
-# transform
-transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor()
-])
+# 加载模型
+processor = BlipProcessor.from_pretrained(
+    "Salesforce/blip-image-captioning-base"
+)
 
-# 模型
-model = MiniBLIP2()
+model = BlipForConditionalGeneration.from_pretrained(
+    "Salesforce/blip-image-captioning-base"
+).to(device)
 
-model.to(device)
-
-model.eval()
-
-# 测试图片
-image_path = "data/Images/667626_18933d713e.jpg"
+# ====== 这里换图片 ======
+image_path = "data/Images/86542183_5e312ae4d4.jpg"
 
 # 读取图片
 image = Image.open(image_path).convert("RGB")
 
-# transform
-image = transform(image)
+# 处理输入
+inputs = processor(images=image, return_tensors="pt").to(device)
 
-# batch 维度
-image = image.unsqueeze(0).to(device)
+# 生成 caption
+out = model.generate(**inputs, max_new_tokens=30)
 
-# inference
-with torch.no_grad():
+caption = processor.decode(out[0], skip_special_tokens=True)
 
-    outputs = model(image)
-
-print("输出 shape:", outputs.shape)
-
-# 简化 caption
-fake_caption = "a dog is running on the grass"
+# 输出结果
+print("\n图片路径:")
+print(image_path)
 
 print("\n生成 caption:")
-print(fake_caption)
+print(caption)

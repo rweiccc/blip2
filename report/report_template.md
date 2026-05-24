@@ -20,53 +20,77 @@
 
 ## 4. 模型结构
 
-请说明自己的 Mini-BLIP2 结构，例如：
+Image
+→ Frozen Vision Encoder
+→ Mini Q-Former
+→ Projection Layer
+→ Frozen Language Decoder
+→ Caption
 
-```text
-Image → Frozen Vision Encoder → Mini Q-Former → Projection Layer → Frozen Language Decoder → Caption
-```
+## 4.1 视觉编码器
 
-### 4.1 Vision Encoder
+openai/clip-vit-base-patch32
 
-填写使用的视觉编码器，例如：`openai/clip-vit-base-patch32`。
+## 4.2 Mini Q-Former
 
-### 4.2 Mini Q-Former
+- 查询向量数量：32
+- 隐藏层维度：768
+- Transformer 层数：2
+- 是否使用 cross-attention：是
 
-说明自己实现的 Mini Q-Former：
+## 4.3 语言解码器
 
-- query token 数量：
-- hidden size：
-- Transformer 层数：
-- 是否使用 cross-attention：
-
-### 4.3 Language Decoder
-
-填写使用的语言解码器，例如：`facebook/opt-125m`。
+facebook/opt-125m
 
 ## 5. 训练设置
 
 请填写：
 
-- 训练数据量：
-- epoch：
-- batch size：
-- learning rate：
-- optimizer：
-- loss function：
-- 冻结的模块：
+- 训练数据量：200
+- epoch：3
+- batch size：4
+- learning rate：le-4
+- optimizer：Adamw
+- loss function：CrossEntropyLoss
+- 冻结的模块： 
+  - Vision Encoder
+  - Language Model
 - 训练的模块：
-
+  - Q-Former
+  - Projection Layer
 ## 6. 训练过程
 
-粘贴训练日志或 loss 变化截图。
-
-示例：
-
-| Epoch | Train Loss |
-|---|---:|
-| 1 |  |
-| 2 |  |
-| 3 |  |
+部分训练如下：
+```text
+10.843851089477539
+10.673324584960938
+10.59214973449707
+10.371302604675293
+10.270759582519531
+9.8764066696167
+10.259981155395508
+9.94402027130127
+9.650736808776855
+9.445172309875488
+8.967204093933105
+8.819290161132812
+9.716012001037598
+8.588641166687012
+8.378031730651855
+8.316567420959473
+8.537890434265137
+8.16748046875
+8.2960844039917
+8.42436408996582
+8.92316722869873
+7.490298748016357
+7.473545551300049
+8.65912914276123
+7.3162970542907715
+7.37550163269043
+6.960870265960693
+7.210042953491211
+```
 
 ## 7. 生成结果展示
 

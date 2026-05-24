@@ -9,11 +9,12 @@ from dataset import Flickr8kDataset
 from model import MiniBLIP2
 
 
-# 设备
+# device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 print("device:", device)
 
-# 数据集
+# dataset
 dataset = Flickr8kDataset(
     image_dir="data/Images",
     caption_file="data/captions.txt"
@@ -35,11 +36,12 @@ tokenizer = AutoTokenizer.from_pretrained(
 
 tokenizer.pad_token = tokenizer.eos_token
 
-# 模型
+# model
 model = MiniBLIP2()
+
 model.to(device)
 
-# projection 到 vocab
+# projection layer
 vocab_projection = nn.Linear(
     768,
     tokenizer.vocab_size
@@ -60,7 +62,10 @@ criterion = nn.CrossEntropyLoss(
 # epoch
 epochs = 1
 
-# 开始训练
+# 保存 loss
+loss_list = []
+
+# training
 for epoch in range(epochs):
 
     model.train()
@@ -89,10 +94,10 @@ for epoch in range(epochs):
         # outputs:
         # [batch, query_num, hidden_size]
 
-        # 平均 pooling
+        # mean pooling
         outputs = outputs.mean(dim=1)
 
-        # vocab logits
+        # logits
         logits = vocab_projection(outputs)
 
         # 扩展 seq_len
@@ -118,6 +123,9 @@ for epoch in range(epochs):
 
         total_loss += loss.item()
 
+        # 保存每一步 loss
+        loss_list.append(loss.item())
+
         progress_bar.set_description(
             f"epoch {epoch+1} loss {loss.item():.4f}"
         )
@@ -126,4 +134,12 @@ for epoch in range(epochs):
 
     print(f"\nepoch {epoch+1} avg loss: {avg_loss:.4f}")
 
+# 保存 loss 到 txt
+with open("loss.txt", "w") as f:
+
+    for loss_value in loss_list:
+
+        f.write(f"{loss_value}\n")
+
 print("\n训练完成")
+print("loss 已保存到 loss.txt")
