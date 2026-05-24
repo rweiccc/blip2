@@ -98,9 +98,9 @@ facebook/opt-125m
 
 | 图片编号 | 真实 Caption | 模型生成 Caption |
 |---|---|---|
-| 1 |  |  |
-| 2 |  |  |
-| 3 |  |  |
+| 667626_18933d713e.jpg | A girl is stretched out in shallow water | a woman in a bikini on a surfboard |
+| 3124838157_7ef96745b7.jpg | Three people stand in front of a store window and smile . | two people standing in front of a store |
+| 86542183_5e312ae4d4.jpg | Two children are playing ice hockey on frozen ground outside . | two children playing in the snow |
 
 如果方便，可以把图片也插入报告中。
 
@@ -108,35 +108,56 @@ facebook/opt-125m
 
 请简要说明：
 
-- 是否成功跑通训练；
-- 生成效果如何；
-- 遇到了什么问题；
-- 如果继续改进，可以怎么做。
+本实验成功复现了 Mini-BLIP2 图像描述生成流程。
+
+实验中使用 CLIP 作为视觉编码器，OPT-125M 作为语言解码器，并实现了简化版 Q-Former 结构。
+
+模型能够成功生成简单英文 caption。
+
+实验过程中主要问题包括：
+
+- Windows 环境 Git 配置问题
+- HuggingFace 模型下载速度较慢
+- 图片路径读取错误
+
+通过逐步调试，最终完成训练与推理。
 
 ## 9. AI 对话过程记录
 
 请填写本次复现过程中与 AI 工具的对话记录（对应 requirements.md 第 9.1 节）。
 
-- 录制工具：例如 entir.io
+- 录制工具：
 - 对话链接：
-- 使用的 AI 模型：例如 Claude / ChatGPT / Gemini
-- 累计对话时长 / 会话数：
+- 使用的 AI 模型：ChatGPT 
+- 累计对话时长 / 会话数：6h
 
 简要说明 AI 在哪些环节给了帮助、哪些地方是自己独立完成或推翻了 AI 的建议（2—4 句话即可）：
 
 ```text
-（在这里写）
+AI帮助我完成了数据集整理、项目结构搭建、代码调试与训练流程实现。
+在inference.py路径错误、train.py显存问题等部分，我根据报错进行了手动修改与测试。
+最终成功完成
 ```
 
 ## 10. Git 提交记录
 
-请填写本次复现的代码仓库与提交历史（对应 requirements.md 第 9.2 节）。
 
-- 仓库地址：
-- 总 commit 数：
+- 仓库地址：https://github.com/rweiccc/blip2.git
+- 总 commit 数：13
 
 粘贴 `git log --oneline` 输出（或截图）：
 
 ```text
-（在这里粘贴 git log --oneline）
+077de0c (HEAD -> main, origin/main, origin/HEAD) feat: add inference module
+5c9868a feat: add inference pipeline
+a86aa23 feat: add training pipeline
+5f6d65e feat: implement mini blip2 model
+5bfb6bf feat: implement dataset loader
+6e750e0 feat: add flickr8k dataset
+d2b11c3 feat: add flickr8k dataset
+b6011ba Translate README to Chinese and document data/ folder
+edac08a Add empty data/ placeholder
+674cc47 Add code/ placeholder so the directory appears in the repo
+54a0028 Add anti-cheat requirements: AI chat log and granular git commits
+d6cb42d Add Mini-BLIP2 reproduction brief
 ```
